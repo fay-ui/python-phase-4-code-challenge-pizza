@@ -2,7 +2,6 @@ from models import Restaurant, RestaurantPizza, Pizza
 from app import app, db
 from faker import Faker
 
-
 class TestApp:
     '''Flask application in app.py'''
 
@@ -169,23 +168,24 @@ class TestApp:
             response = app.test_client().post(
                 '/restaurant_pizzas',
                 json={
-                    "price": 0,
+                    "price": 0,  # Invalid price
                     "pizza_id": pizza.id,
                     "restaurant_id": restaurant.id,
                 }
             )
 
             assert response.status_code == 400
-            assert response.json['errors'] == ["validation errors"]
+            assert response.json['errors'] == ["Price must be between 1 and 30"]
 
+            # Test with price > 30
             response = app.test_client().post(
                 '/restaurant_pizzas',
                 json={
-                    "price": 31,
+                    "price": 31,  # Invalid price
                     "pizza_id": pizza.id,
                     "restaurant_id": restaurant.id,
                 }
             )
 
             assert response.status_code == 400
-            assert response.json['errors'] == ["validation errors"]
+            assert response.json['errors'] == ["Price must be between 1 and 30"]
